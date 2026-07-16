@@ -29,7 +29,8 @@ class WriteRequest(BaseModel):
     payload: Dict[str, Any]
     trace_id: str
     input_refs: List[str] = Field(default_factory=list)
-    confidence: Optional[float] = None
+    # ge/le also rejects the bare NaN literal that JSON permits.
+    confidence: Optional[float] = Field(None, ge=0.0, le=1.0)
     ttl_ms: Optional[int] = None
     evidence_refs: List[str] = Field(default_factory=list)
     scope: Literal["episode", "persistent"] = "episode"
