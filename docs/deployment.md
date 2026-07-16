@@ -11,10 +11,17 @@
 
 ```bash
 # Core package (kernel + benchmark)
-pip install -e .
+pip install alethic-kernel
 
 # With API server
-pip install -e ".[api]"
+pip install "alethic-kernel[api]"
+```
+
+From a source checkout, for development:
+
+```bash
+# Core package (kernel + benchmark)
+pip install -e .
 
 # With development tools
 pip install -e ".[dev]"
@@ -88,9 +95,20 @@ These are read by the API server's dependency injection. CLI flags (`--store`, `
 | Benchmark runs | `MemoryStore` | Fast, no persistence needed |
 | Unit tests | `MemoryStore` | Isolated, no cleanup |
 | API server (dev) | `MemoryStore` | Simple, no file management |
-| API server (production) | `SqliteStore` | Survives restarts, query capabilities |
 | Multi-episode learning | `SqliteStore` | Persistent records across episodes |
 | Custom integration | Implement `StoreProtocol` | 6 methods to satisfy |
+
+> **`SqliteStore` is not yet recommended for production.** It is durable and
+> correct for single-process, single-kernel use, but it has known gaps that
+> `MemoryStore` does not: commits span multiple transactions (a crash mid-commit
+> can leave an evidence record for a belief that was never written), record IDs
+> come from an in-process counter (so reusing a `trace_id` after a restart, or
+> running more than one worker, raises `IntegrityError`), and it can disagree with
+> `MemoryStore` on TTL-expired evidence. Track these before depending on it.
+>
+> Note also that the [HTTP API has no authentication](http-api.md#security), so
+> "production API server" is not a supported posture in any store configuration
+> today.
 
 ## Testing
 

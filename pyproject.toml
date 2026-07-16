@@ -24,10 +24,10 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/emiluzelac/alethic"
-Documentation = "https://github.com/emiluzelac/alethic#documentation"
-Repository = "https://github.com/emiluzelac/alethic.git"
-"Bug Tracker" = "https://github.com/emiluzelac/alethic/issues"
+Homepage = "https://github.com/alethicdev/alethic"
+Documentation = "https://github.com/alethicdev/alethic#documentation"
+Repository = "https://github.com/alethicdev/alethic.git"
+"Bug Tracker" = "https://github.com/alethicdev/alethic/issues"
 "Research Paper" = "https://doi.org/10.5281/zenodo.18691808"
 
 [project.optional-dependencies]

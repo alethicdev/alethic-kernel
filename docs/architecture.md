@@ -94,7 +94,17 @@ Six roles govern who can write what:
 | `sim_validator` | evidence (COMMIT), predictions (COMMIT) |
 | `kernel` | beliefs (COMMIT), actions (COMMIT), predictions (COMMIT) |
 
-A `PermissionError` is raised if a role attempts an unauthorized write. The kernel itself is the only role that can commit beliefs, actions, and predictions — planners can only propose. See [API Reference](api-reference.md) for the full permissions matrix.
+A `PermissionError` is raised if a role attempts an unauthorized write. Within a
+Python process, the kernel is the only role that can commit beliefs, actions, and
+predictions — planners can only propose. See [API Reference](api-reference.md) for
+the full permissions matrix.
+
+> **This matrix is worker discipline, not a security boundary.** The role is
+> supplied by the caller, so it is a declaration of intent rather than an
+> authenticated claim. It keeps a well-behaved worker inside its lane; it does not
+> defend against a caller that lies about who it is. Over the [HTTP
+> API](http-api.md) — where the role arrives in the request body — it provides no
+> protection at all. Only grant kernel access to code you trust.
 
 ## Record Lifecycle
 

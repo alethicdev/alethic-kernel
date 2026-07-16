@@ -2,20 +2,38 @@
 
 The Alethic kernel exposes a REST API via FastAPI, providing both low-level kernel operations and a high-level episode endpoint. The `AlethicClient` SDK provides a unified Python interface for both local and HTTP modes.
 
+## Security
+
+**The HTTP API is a development and evaluation tool. Do not expose it to a
+network you do not control.** It has no authentication, and the governance
+guarantees the library provides do not survive the network boundary:
+
+- **No authentication or authorization.** Every endpoint is anonymous.
+- **All callers share one kernel.** `trace_id` is a caller-supplied string, so it
+  namespaces state but does not isolate it. Any client can read, overwrite, or
+  corrupt any other client's records by naming their `trace_id`.
+- **`role` is self-asserted.** It arrives in the request body, so a caller can
+  claim the `kernel` role and commit directly — bypassing validation entirely.
+- **Request bodies are unbounded**, and records are never evicted.
+
+Bind to loopback, keep it behind your own authenticating proxy, and only give it
+traffic you trust. Use the library in-process if you need the governance
+guarantees to hold.
+
 ## Starting the Server
 
 ```bash
 # Install API dependencies
-pip install -e ".[api]"
+pip install "alethic-kernel[api]"
 
-# In-memory store (default)
+# In-memory store (default), bound to localhost
 alethic serve
 
 # SQLite persistence
 alethic serve --store sqlite --db-path blackboard.db
 
-# Custom host/port with auto-reload
-alethic serve --host 0.0.0.0 --port 9000 --reload
+# Custom port with auto-reload
+alethic serve --port 9000 --reload
 ```
 
 | Flag | Default | Description |
@@ -98,6 +116,11 @@ Response:
 ```
 
 Returns **403** if the role is not authorized for the slot+mode combination.
+
+> **The 403 is a schema check, not authorization.** `role` is read from the
+> request body, so a client chooses its own role — including `kernel`, which may
+> COMMIT. This endpoint therefore cannot enforce the permissions matrix against
+> an untrusted caller. See [Security](#security).
 
 ### Commit Belief
 

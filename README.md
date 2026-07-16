@@ -13,7 +13,7 @@ The core insight: architectural governance — not model scale — is the primar
 ## How It Works
 
 <p align="center">
-  <img src="docs/architecture.png" alt="Blackboard Kernel Architecture" width="720">
+  <img src="https://raw.githubusercontent.com/alethicdev/alethic/main/docs/architecture.png" alt="Blackboard Kernel Architecture" width="720">
 </p>
 
 Seven semantic slots hold all state. Workers read from and write to the kernel using two modes: **PROPOSE** (tentative, must pass validation) and **COMMIT** (finalized). Every proposal passes through the kernel's validation pipelines — stale evidence, missing percepts, constraint violations, and negative predictions all cause rejection, not action.
@@ -21,7 +21,7 @@ Seven semantic slots hold all state. Workers read from and write to the kernel u
 ## Quick Start
 
 ```bash
-pip install -e .
+pip install alethic-kernel
 ```
 
 ### Use as a library
@@ -30,7 +30,13 @@ pip install -e .
 from alethic_kernel.alethic import AlethicClient
 
 client = AlethicClient(mode="local")
-result = client.run_episode(task_inputs={"charge_id": "ch_3P0x1A2B3C"})
+result = client.run_episode(task_inputs={
+    "chargeId": "ch_3P0x1A2B3C",
+    "customerId": "cus_QXyZ123",
+    "customerName": "Ada Lovelace",
+    "amount": 4200,
+    "disputeReason": "duplicate",
+})
 print(result.metrics)  # {'task_success': 1.0, 'unsafe_action': 0.0, ...}
 ```
 
@@ -47,9 +53,15 @@ python -m alethic_kernel.run
 ### Start the API server
 
 ```bash
-pip install -e ".[api]"
-alethic serve --store sqlite --port 8000
+pip install "alethic-kernel[api]"
+alethic serve --port 8000
 ```
+
+> **The HTTP API has no authentication and is not production-ready.** Every
+> endpoint is anonymous and all callers share one kernel, so any client can read
+> and overwrite any other client's state by naming its `trace_id`. Bind it to
+> localhost and treat it as a development and evaluation tool only. The library
+> itself does not carry this limitation.
 
 ## Benchmark Results
 
@@ -66,12 +78,12 @@ The kernel-backed agents (`alethic` and `llm_bk`) achieve **zero unsafe actions*
 
 ## Documentation
 
-- **[Architecture](docs/architecture.md)** — Blackboard kernel design, semantic slots, validation pipelines
-- **[API Reference](docs/api-reference.md)** — Every public class and method with signatures and return codes
-- **[Workers](docs/workers.md)** — Worker protocol, built-in workers, writing custom workers
-- **[HTTP API](docs/http-api.md)** — REST endpoints, AlethicClient SDK, OpenTelemetry
-- **[Benchmark](docs/benchmark.md)** — Tasks, perturbations, metrics, CLI reference
-- **[Deployment](docs/deployment.md)** — Docker, environment variables, store selection, testing
+- **[Architecture](https://github.com/alethicdev/alethic/blob/main/docs/architecture.md)** — Blackboard kernel design, semantic slots, validation pipelines
+- **[API Reference](https://github.com/alethicdev/alethic/blob/main/docs/api-reference.md)** — Every public class and method with signatures and return codes
+- **[Workers](https://github.com/alethicdev/alethic/blob/main/docs/workers.md)** — Worker protocol, built-in workers, writing custom workers
+- **[HTTP API](https://github.com/alethicdev/alethic/blob/main/docs/http-api.md)** — REST endpoints, AlethicClient SDK, OpenTelemetry
+- **[Benchmark](https://github.com/alethicdev/alethic/blob/main/docs/benchmark.md)** — Tasks, perturbations, metrics, CLI reference
+- **[Deployment](https://github.com/alethicdev/alethic/blob/main/docs/deployment.md)** — Docker, environment variables, store selection, testing
 
 ## Project Structure
 
