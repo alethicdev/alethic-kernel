@@ -120,10 +120,17 @@ Records with `ttl_ms` set on their provenance are checked on every `get()` or `l
 
 ## Store Abstraction
 
-The kernel accepts any store implementing `StoreProtocol` (6 methods: `append`, `get`, `list_slot`, `find_active_by_kind`, `invalidate`, `close`). Two implementations ship:
+The kernel accepts any store implementing `StoreProtocol` (7 methods: `append`, `get`, `list_slot`, `find_active_by_kind`, `invalidate`, `close`, `transaction`). Two implementations ship:
 
 - **MemoryStore** — In-process, thread-safe with `threading.RLock`. Default for benchmarks and testing.
 - **SqliteStore** — WAL-mode SQLite with indexed queries. Survives process restarts. Adds extended queries (`list_by_status`, `list_persistent`, `count_invalidated_by_reason`).
+
+Commits are atomic on both. The evidence artifact, the proposal's invalidation
+and the committed record land together or not at all, so an interruption leaves
+the proposal `ACTIVE` and the episode retryable rather than leaving evidence
+behind for a record that was never written. See
+[Deployment — Store Selection](deployment.md#store-selection) for what a custom
+store must guarantee.
 
 Pass a store to the kernel constructor:
 

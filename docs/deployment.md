@@ -96,19 +96,28 @@ These are read by the API server's dependency injection. CLI flags (`--store`, `
 | Unit tests | `MemoryStore` | Isolated, no cleanup |
 | API server (dev) | `MemoryStore` | Simple, no file management |
 | Multi-episode learning | `SqliteStore` | Persistent records across episodes |
-| Custom integration | Implement `StoreProtocol` | 6 methods to satisfy |
+| Custom integration | Implement `StoreProtocol` | 7 methods to satisfy |
 
-> **`SqliteStore` is not yet recommended for production.** It is durable and
-> correct for single-process, single-kernel use, but it has known gaps that
-> `MemoryStore` does not: commits span multiple transactions (a crash mid-commit
-> can leave an evidence record for a belief that was never written), record IDs
-> come from an in-process counter (so reusing a `trace_id` after a restart, or
-> running more than one worker, raises `IntegrityError`), and it can disagree with
-> `MemoryStore` on TTL-expired evidence. Track these before depending on it.
->
-> Note also that the [HTTP API has no authentication](http-api.md#security), so
+Both stores must reach the same governance decision for the same inputs — which
+store you configure is a deployment choice, not a semantic one. The whole
+governance suite runs against both on every commit, so a divergence fails CI.
+
+A custom store has two obligations beyond returning the right records:
+
+- **`append` must raise `RecordIdConflict`** if the id is taken. Records are an
+  append-only audit trail; replacing one destroys history.
+- **`transaction()` must be atomic and re-entrant.** A commit writes an evidence
+  artifact, invalidates the proposal and writes the record. Applied piecemeal, an
+  interruption leaves evidence vouching for a record that was never written,
+  beside a proposal marked superseded by a commit that never happened — a trail
+  that is false rather than merely incomplete, and an episode that cannot be
+  retried. If your backing store has no transactions, undo the writes yourself;
+  `MemoryStore` keeps an undo journal for exactly this reason.
+
+> Note that the [HTTP API has no authentication](http-api.md#security), so
 > "production API server" is not a supported posture in any store configuration
-> today.
+> today. That limit is the API's, not the store's — the library's guarantees hold
+> in-process on either backend.
 
 ## Testing
 
