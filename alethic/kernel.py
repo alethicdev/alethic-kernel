@@ -1,4 +1,5 @@
 from __future__ import annotations
+import math
 import threading
 from typing import Any, Dict, List, Literal, Optional, Tuple
 import time
@@ -39,6 +40,11 @@ class Kernel:
         allowed = perms.get(slot, frozenset()) if perms is not None else frozenset()
         if mode not in allowed:
             raise PermissionError(f"Role {role} cannot {mode} to {slot}")
+        # Rejects NaN and the infinities as well as out-of-range values: every
+        # comparison against NaN is False, so a NaN that reached the confidence
+        # gate would pass straight through it.
+        if confidence is not None and not (0.0 <= confidence <= 1.0):
+            raise ValueError(f"confidence must be in [0.0, 1.0], got {confidence!r}")
         rec_id = self._next_id(slot, trace_id)
         rec = Record(
             id=rec_id, slot=slot, mode=mode, kind=kind, payload=payload,
@@ -104,10 +110,13 @@ class Kernel:
             # confidence gate on dependent percepts
             for dep_kind in prop.payload.get("depends_on", []):
                 dep_rec = self.store.find_active_by_kind("percepts", dep_kind, trace_id)
-                if (dep_rec and dep_rec.prov.confidence is not None
-                        and dep_rec.prov.confidence < self.min_confidence):
-                    self.store.invalidate(proposal_id, f"Low confidence on percept: {dep_kind}")
-                    return False, "LOW_CONFIDENCE"
+                if dep_rec and dep_rec.prov.confidence is not None:
+                    conf = dep_rec.prov.confidence
+                    # An unknown confidence is exactly what this gate is for, so
+                    # NaN must fail it rather than slip through `conf < min`.
+                    if math.isnan(conf) or conf < self.min_confidence:
+                        self.store.invalidate(proposal_id, f"Low confidence on percept: {dep_kind}")
+                        return False, "LOW_CONFIDENCE"
 
             # record evidence artifact
             checks = ["existence", "staleness", "conflict"]

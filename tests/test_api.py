@@ -1,6 +1,8 @@
 """Tests for the Alethic API using FastAPI TestClient."""
 from __future__ import annotations
 
+import json
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -19,6 +21,47 @@ def _reset():
 def client():
     app = create_app()
     return TestClient(app)
+
+
+class TestConfidenceValidation:
+    """A percept's confidence must be a real number in [0, 1].
+
+    JSON permits a bare NaN literal, and every comparison against NaN is False,
+    so an unvalidated NaN would sail through the kernel's confidence gate and
+    commit — the gate silently disabled by the one value that most needs it.
+    """
+
+    @staticmethod
+    def _body(confidence):
+        return {
+            "role": "tool", "slot": "percepts", "mode": "COMMIT", "kind": "charge",
+            "payload": {"stale": False, "conflict": False},
+            "trace_id": "t-conf", "confidence": confidence,
+        }
+
+    @pytest.mark.parametrize("bad", [float("nan"), float("inf"), float("-inf"), 1.5, -0.5])
+    def test_invalid_confidence_rejected_with_422(self, client: TestClient, bad: float):
+        resp = client.post(
+            "/v1/write",
+            content=json.dumps(self._body(bad)),
+            headers={"content-type": "application/json"},
+        )
+        assert resp.status_code == 422, f"{bad!r} should be refused, got {resp.text[:200]}"
+
+    def test_nan_rejection_is_reported_not_a_500(self, client: TestClient):
+        """The 422 body must serialize even though the rejected input is NaN."""
+        resp = client.post(
+            "/v1/write",
+            content=json.dumps(self._body(float("nan"))),
+            headers={"content-type": "application/json"},
+        )
+        assert resp.status_code == 422
+        assert resp.json()["detail"][0]["loc"] == ["body", "confidence"]
+
+    @pytest.mark.parametrize("good", [0.0, 0.5, 1.0, None])
+    def test_valid_confidence_accepted(self, client: TestClient, good):
+        resp = client.post("/v1/write", json=self._body(good))
+        assert resp.status_code == 200
 
 
 class TestHealthEndpoints:

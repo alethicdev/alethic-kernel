@@ -229,6 +229,44 @@ class TestCommitBeliefFromProposal:
         assert ok is False
         assert code == "LOW_CONFIDENCE"
 
+    def test_nan_confidence_does_not_bypass_gate(self, kernel: Kernel, trace_id: str):
+        """NaN must fail the gate closed, not slip through it.
+
+        Every comparison against NaN is False, so an unguarded `confidence <
+        min_confidence` silently admits it. A percept whose confidence is
+        unknown is the case the gate exists for.
+        """
+        with pytest.raises(ValueError):
+            kernel.write("tool", "percepts", "COMMIT", "charge",
+                         {"stale": False, "conflict": False}, trace_id,
+                         confidence=float("nan"))
+
+    def test_nan_confidence_rejected_even_if_it_reaches_the_gate(self, trace_id: str):
+        """Defence in depth: if a NaN is already in the store, the gate still refuses."""
+        k = Kernel()
+        rec = k.write("tool", "percepts", "COMMIT", "charge",
+                      {"stale": False, "conflict": False}, trace_id, confidence=0.9)
+        object.__setattr__(rec.prov, "confidence", float("nan"))
+        prop = k.write("planner", "beliefs", "PROPOSE", "refund_due",
+                       {"value": True, "depends_on": ["charge"]}, trace_id)
+        ok, code = k.commit_belief_from_proposal(prop.id, trace_id)
+        assert ok is False
+        assert code == "LOW_CONFIDENCE"
+
+    @pytest.mark.parametrize("bad", [1.5, -0.5, float("inf"), float("-inf")])
+    def test_out_of_range_confidence_rejected(self, kernel: Kernel, trace_id: str, bad: float):
+        with pytest.raises(ValueError):
+            kernel.write("tool", "percepts", "COMMIT", "charge",
+                         {"stale": False, "conflict": False}, trace_id,
+                         confidence=bad)
+
+    @pytest.mark.parametrize("ok_conf", [0.0, 0.5, 1.0])
+    def test_valid_confidence_still_accepted(self, kernel: Kernel, trace_id: str, ok_conf: float):
+        rec = kernel.write("tool", "percepts", "COMMIT", "charge",
+                           {"stale": False, "conflict": False}, trace_id,
+                           confidence=ok_conf)
+        assert rec.prov.confidence == ok_conf
+
     def test_confidence_at_threshold_passes(self, kernel: Kernel, trace_id: str):
         kernel.write("tool", "percepts", "COMMIT", "charge",
                      {"stale": False, "conflict": False}, trace_id,
