@@ -1,18 +1,13 @@
-"""The README is the PyPI landing page, so its assets have to resolve there too.
+"""The README is the PyPI landing page, so its images must resolve there.
 
-Relative and absolute paths each work in exactly one of the two places the
-README is read, and which one is correct depends on whether the repository is
-public yet:
+PyPI renders this README with no repository to resolve a relative path against,
+so `docs/architecture.png` renders as a broken image on the project page. Only an
+absolute URL works there.
 
-    private repo   GitHub renders relative paths; raw.githubusercontent URLs are
-                   fetched anonymously by GitHub's image proxy and 404.
-    public repo    both work on GitHub.
-    PyPI           only absolute URLs work — there is no repository to resolve a
-                   relative path against.
-
-So the image is relative today and must become absolute before the first PyPI
-release. This test is the reminder: it fails once packaging is attempted with an
-image PyPI cannot fetch.
+The images were relative for a while, deliberately: GitHub fetches README images
+anonymously, so a raw.githubusercontent URL 404s on a private repo. That
+constraint ended when the repo went public, and absolute is now correct in both
+places at once.
 """
 from __future__ import annotations
 
@@ -21,6 +16,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 README = REPO / "README.md"
+RAW_PREFIX = "https://raw.githubusercontent.com/alethicdev/alethic/main/"
 
 
 def _img_srcs(text: str) -> list[str]:
@@ -29,32 +25,25 @@ def _img_srcs(text: str) -> list[str]:
     return html + md
 
 
-def test_relative_readme_images_exist_on_disk():
-    """A relative path only renders on GitHub if the file is actually there."""
-    for src in _img_srcs(README.read_text()):
-        if src.startswith(("http://", "https://")):
-            continue
-        assert (REPO / src).is_file(), f"README references a missing image: {src}"
-
-
-def test_readme_images_are_absolute_once_published():
-    """Before the first PyPI release, every image must be an absolute URL.
-
-    Skipped while the version is unreleased. When you bump off 0.1.0 to publish,
-    this starts failing until the image URLs are absolute — which is the point.
-    """
-    import tomllib
-
-    with open(REPO / "pyproject.toml", "rb") as fh:
-        version = tomllib.load(fh)["project"]["version"]
-
-    if version == "0.1.0":
-        import pytest
-        pytest.skip("0.1.0 is unreleased; images go absolute at publish time")
-
+def test_readme_images_are_absolute():
+    """A relative image renders broken on PyPI, where there is no repo."""
     relative = [s for s in _img_srcs(README.read_text())
                 if not s.startswith(("http://", "https://"))]
     assert not relative, (
-        f"README has relative images {relative}, which render as broken on the "
-        f"PyPI page. Point them at raw.githubusercontent.com/alethicdev/alethic/main/..."
+        f"README has relative images {relative}, which render broken on the PyPI "
+        f"page. Use {RAW_PREFIX}<path>."
     )
+
+
+def test_readme_images_point_at_files_that_exist():
+    """An absolute URL can rot silently — it is not checked by anything at build.
+
+    Anything under our own raw.githubusercontent prefix names a path in this
+    repo, so it can be checked here without a network call: a renamed or deleted
+    asset fails now rather than as a broken image on the project page.
+    """
+    for src in _img_srcs(README.read_text()):
+        if not src.startswith(RAW_PREFIX):
+            continue
+        path = REPO / src[len(RAW_PREFIX):]
+        assert path.is_file(), f"README image points at a missing file: {src}"

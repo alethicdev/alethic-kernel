@@ -6,7 +6,15 @@
 
 **Architecture:** Static Astro site, zero JS except the demo. Pyodide loads *on first interaction only* and runs a vendored, version-pinned `alethic_kernel` wheel client-side. No server, no API — deliberately: a hosted demo endpoint would be an unauthenticated shared kernel, which is exactly the vulnerability the kernel's HTTP API still has. Presets, not a REPL. Every preset's expected outcome is asserted in CI against the shipped wheel, so the page can never claim a refusal the code does not produce.
 
-**Tech Stack:** Astro 5, TypeScript, Pyodide 0.28.0 (CDN, SRI-pinned), Playwright (preset assertions), Vercel (static deploy), GitHub Actions.
+**Tech Stack:** Astro 7, TypeScript, Pyodide 0.28.0 (CDN, SRI-pinned), Playwright (preset assertions), Vercel (static deploy), GitHub Actions.
+
+> **Amended during execution (2026-07-16):** the plan originally pinned Astro 5.
+> 5.18.2 is the newest 5.x and still carries a high-severity advisory, fixable
+> only by moving to 7. Not exploitable here — static output, no server, no
+> untrusted input, none of the affected features — but this repo is going public
+> as a governance framework's front door, and a red `npm audit` costs more than a
+> version bump. Approved by Emil. `npm audit` is clean on 7.1.0; use
+> `"astro": "^7.0.0"` wherever this plan says `^5.0.0`.
 
 ## Global Constraints
 

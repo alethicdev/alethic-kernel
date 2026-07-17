@@ -13,11 +13,10 @@ The core insight: architectural governance — not model scale — is the primar
 ## How It Works
 
 <p align="center">
-  <!-- Relative so it renders on GitHub while the repo is private: GitHub proxies
-       images anonymously, so a raw.githubusercontent URL 404s until we go public.
-       Switch to the absolute URL when publishing to PyPI, which has no repo to
-       resolve this against. -->
-  <img src="docs/architecture.png" alt="Blackboard Kernel Architecture" width="720">
+  <!-- Absolute: PyPI renders this README with no repository to resolve a
+       relative path against. Safe now that the repo is public — GitHub fetches
+       README images anonymously, which is why this had to stay relative before. -->
+  <img src="https://raw.githubusercontent.com/alethicdev/alethic/main/docs/architecture.png" alt="Blackboard Kernel Architecture" width="720">
 </p>
 
 Seven semantic slots hold all state. Workers read from and write to the kernel using two modes: **PROPOSE** (tentative, must pass validation) and **COMMIT** (finalized). Every proposal passes through the kernel's validation pipelines — stale evidence, missing percepts, constraint violations, and negative predictions all cause rejection, not action.
