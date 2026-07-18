@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-07-18
+
+### Changed
+
+- Renamed the sole public Python namespace from `alethic_kernel` to `alethic`.
+- Mapped the repository's `src/` directory directly to the installed `alethic`
+  package, eliminating the repeated source-directory name without adding a
+  compatibility copy.
+- Reduced the distribution to the domain-neutral governed cognitive substrate.
+  Benchmark agents, Stripe tasks, LLM prompts, the evaluation harness, and the
+  development HTTP service are no longer shipped in the Alethic wheel.
+- Moved canonical repository metadata to `emiluzelac/alethic`.
+
+### Removed
+
+- Removed the `alethic_kernel` compatibility namespace. Import from `alethic`.
+- Removed the benchmark CLI and application-server extras from the runtime
+  distribution.
+
 ## [0.2.0] - 2026-07-18
 
 ### Changed

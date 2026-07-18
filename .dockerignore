@@ -1,8 +1,0 @@
-results/
-__pycache__/
-*.db
-.git/
-.pytest_cache/
-*.pyc
-.DS_Store
-*.egg-info/

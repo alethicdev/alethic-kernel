@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from alethic_kernel.permissions import PERMISSIONS, Role
+from alethic.permissions import PERMISSIONS, Role
 
 
 class TestPermissions:

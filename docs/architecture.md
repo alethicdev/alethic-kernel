@@ -2,7 +2,8 @@
 
 The Alethic kernel implements the **blackboard architecture pattern** as a governance layer for AI agent orchestration. Instead of letting components communicate through untyped text or loose function calls, all cognitive state lives on a shared blackboard with enforced access control, typed records, and validation gates.
 
-The kernel contains zero domain-specific logic. All domain knowledge lives in tools, agents, and task definitions.
+The kernel contains zero domain-specific logic. Models, prompts, tools, tasks,
+and application integrations live outside the Alethic package.
 
 ## The 7 Semantic Slots
 
@@ -101,10 +102,9 @@ the full permissions matrix.
 
 > **This matrix is worker discipline, not a security boundary.** The role is
 > supplied by the caller, so it is a declaration of intent rather than an
-> authenticated claim. It keeps a well-behaved worker inside its lane; it does not
-> defend against a caller that lies about who it is. Over the [HTTP
-> API](http-api.md) — where the role arrives in the request body — it provides no
-> protection at all. Only grant kernel access to code you trust.
+> authenticated claim. It keeps a well-behaved worker inside its lane; it does
+> not defend against a caller that lies about who it is. Only grant kernel
+> access to code you trust.
 
 ## Record Lifecycle
 
@@ -122,21 +122,21 @@ Records with `ttl_ms` set on their provenance are checked on every `get()` or `l
 
 The kernel accepts any store implementing `StoreProtocol` (7 methods: `append`, `get`, `list_slot`, `find_active_by_kind`, `invalidate`, `close`, `transaction`). Two implementations ship:
 
-- **MemoryStore** — In-process, thread-safe with `threading.RLock`. Default for benchmarks and testing.
+- **MemoryStore** — In-process, thread-safe with `threading.RLock`. The default
+  for ephemeral workloads and testing.
 - **SqliteStore** — WAL-mode SQLite with indexed queries. Survives process restarts. Adds extended queries (`list_by_status`, `list_persistent`, `count_invalidated_by_reason`).
 
 Commits are atomic on both. The evidence artifact, the proposal's invalidation
 and the committed record land together or not at all, so an interruption leaves
 the proposal `ACTIVE` and the episode retryable rather than leaving evidence
-behind for a record that was never written. See
-[Deployment — Store Selection](deployment.md#store-selection) for what a custom
-store must guarantee.
+behind for a record that was never written. Custom stores must provide the same
+transaction boundary through `StoreProtocol.transaction()`.
 
 Pass a store to the kernel constructor:
 
 ```python
-from alethic_kernel.kernel import Kernel
-from alethic_kernel.sqlite_store import SqliteStore
+from alethic.kernel import Kernel
+from alethic.sqlite_store import SqliteStore
 
 store = SqliteStore("blackboard.db")
 kernel = Kernel(store=store)
@@ -155,4 +155,6 @@ The `Session` class generates unique trace IDs for each episode: `{session_id}-e
 
 The architectural choices — blackboard pattern, propose/commit protocol, role-based access, typed slots — are individually well-established in systems engineering and cognitive science. The contribution is their synthesis as a governance layer for LLM agent orchestration.
 
-For the full academic treatment including threat model, formal semantics, and controlled evaluation results, see [From Fragile Glue to Governed Cognition](../From_Fragile_Glue_to_Governed_Cognition.md).
+For the full academic treatment, threat model, formal semantics, and controlled
+evaluation results, see
+[From Fragile Glue to Governed Cognition](https://doi.org/10.5281/zenodo.18691808).

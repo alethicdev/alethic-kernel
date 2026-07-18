@@ -1,8 +1,8 @@
-"""Tests for alethic_kernel/sim_worker.py."""
+"""Tests for alethic/sim_worker.py."""
 from __future__ import annotations
 
-from alethic_kernel.kernel import Kernel
-from alethic_kernel.sim_worker import SimRule, SimulatorWorker, evaluate_rule, _check_conditions
+from alethic.kernel import Kernel
+from alethic.sim_worker import SimRule, SimulatorWorker, evaluate_rule, _check_conditions
 
 
 class TestCheckConditions:

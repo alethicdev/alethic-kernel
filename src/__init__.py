@@ -14,7 +14,6 @@ from .orchestrator import Orchestrator, OrchestratorResult
 from .session import Session
 from .sim_worker import SimulatorWorker, SimRule, evaluate_rule
 from .adaptive_worker import AdaptiveWorker
-from .client import AlethicClient, EpisodeResult
 
 try:
     __version__ = _version("alethic-kernel")
@@ -23,9 +22,7 @@ except PackageNotFoundError:  # running from a source tree, not installed
 
 __all__ = [
     "AdaptiveWorker",
-    "AlethicClient",
     "BaseWorker",
-    "EpisodeResult",
     "EvidenceValidator",
     "Kernel",
     "MemoryStore",

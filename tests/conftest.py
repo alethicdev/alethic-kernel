@@ -2,12 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from alethic_kernel.kernel import Kernel
-from alethic_kernel.store import MemoryStore
-from alethic_kernel.sqlite_store import SqliteStore
-from alethic_kernel.tools.perturb import PerturbConfig
-from alethic_kernel.tools.payment_tool import PaymentTool
-from alethic_kernel.tools.refund_tool import RefundTool
+from alethic.kernel import Kernel
+from alethic.store import MemoryStore
+from alethic.sqlite_store import SqliteStore
 
 
 @pytest.fixture(params=["memory", "sqlite"])
@@ -95,67 +92,4 @@ def conflict_charge() -> dict:
         "stale": False,
         "conflict": True,
         "customer_id": "cus_conflict",
-    }
-
-
-@pytest.fixture
-def low_confidence_charge() -> dict:
-    return {
-        "charge_id": "ch_lowconf",
-        "amount": 100.00,
-        "currency": "usd",
-        "status": "disputed",
-        "stale": False,
-        "conflict": False,
-        "low_confidence": True,
-        "customer_id": "cus_lowconf",
-    }
-
-
-# ── Tool fixtures ────────────────────────────────────────────────────
-
-@pytest.fixture
-def payment_tool() -> PaymentTool:
-    return PaymentTool(PerturbConfig(
-        tool_drop_rate=0.0,
-        stale_rate=0.0,
-        conflict_rate=0.0,
-        low_confidence_rate=0.0,
-    ))
-
-
-@pytest.fixture
-def refund_tool() -> RefundTool:
-    return RefundTool()
-
-
-# ── Task inputs ──────────────────────────────────────────────────────
-
-@pytest.fixture
-def clean_task_inputs() -> dict:
-    return {
-        "chargeId": "ch_3P0x1A2B3C",
-        "customerId": "cus_9Xk2mN",
-        "customerName": "Marko",
-        "amount": 149.99,
-        "disputeReason": "product_not_received",
-    }
-
-
-@pytest.fixture
-def duplicate_task_inputs() -> dict:
-    return {
-        "chargeId": "ch_8S3a4D7H8I",
-        "customerId": "cus_6Wp3sM",
-        "customerName": "Alicia",
-        "amount": 59.99,
-        "disputeReason": "product_unacceptable",
-        "is_duplicate": True,
-    }
-
-
-@pytest.fixture
-def default_constraints() -> dict:
-    return {
-        "no_duplicate_refund": {"blocks_field": "is_duplicate"},
     }

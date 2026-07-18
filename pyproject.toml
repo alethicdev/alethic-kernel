@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "alethic-kernel"
-version = "0.2.0"
-description = "A governed cognition framework for AI systems"
+version = "0.3.0"
+description = "Alethic: a governed cognitive substrate for AI systems"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -25,29 +25,24 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/alethicdev/alethic-kernel"
-Documentation = "https://github.com/alethicdev/alethic-kernel#documentation"
-Repository = "https://github.com/alethicdev/alethic-kernel.git"
-"Bug Tracker" = "https://github.com/alethicdev/alethic-kernel/issues"
+Homepage = "https://github.com/emiluzelac/alethic"
+Documentation = "https://github.com/emiluzelac/alethic#documentation"
+Repository = "https://github.com/emiluzelac/alethic.git"
+"Bug Tracker" = "https://github.com/emiluzelac/alethic/issues"
 "Research Paper" = "https://doi.org/10.5281/zenodo.18691808"
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "pytest-cov", "mypy", "httpx"]
-api = ["fastapi>=0.115", "uvicorn[standard]", "opentelemetry-api", "opentelemetry-sdk"]
-
-[project.scripts]
-alethic = "alethic_kernel.run:main"
+dev = ["pytest>=8.0", "pytest-cov", "mypy"]
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+packages = ["alethic"]
 include-package-data = true
 
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["alethic_kernel*"]
+[tool.setuptools.package-dir]
+alethic = "src"
 
 [tool.setuptools.package-data]
-"alethic_kernel" = ["tasks/*.yaml", "py.typed"]
+alethic = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -55,4 +50,3 @@ addopts = "-v --tb=short"
 
 [tool.mypy]
 strict = true
-mypy_path = "src"

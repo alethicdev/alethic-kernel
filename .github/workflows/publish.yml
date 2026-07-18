@@ -36,6 +36,22 @@ jobs:
           python -m build
           python -m twine check dist/*
 
+      - name: Verify the wheel contains one namespace
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          wheel = next(Path("dist").glob("*.whl"))
+          with ZipFile(wheel) as archive:
+              names = archive.namelist()
+
+          runtime = [name for name in names if ".dist-info/" not in name]
+          assert runtime
+          assert all(name.startswith("alethic/") for name in runtime), runtime
+          assert not any(name.startswith("alethic_kernel/") for name in names)
+          PY
+
       - name: Publish distributions
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

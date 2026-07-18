@@ -11,9 +11,9 @@ import tempfile
 
 import pytest
 
-from alethic_kernel.kernel import Kernel
-from alethic_kernel.store import MemoryStore
-from alethic_kernel.sqlite_store import SqliteStore
+from alethic.kernel import Kernel
+from alethic.store import MemoryStore
+from alethic.sqlite_store import SqliteStore
 
 
 def _percept_and_proposal(k: Kernel, trace: str):
@@ -78,8 +78,8 @@ class TestCommitIsAtomic:
 
 CRASH_CHILD = '''
 import os, sys
-from alethic_kernel.kernel import Kernel
-from alethic_kernel.sqlite_store import SqliteStore
+from alethic.kernel import Kernel
+from alethic.sqlite_store import SqliteStore
 
 k = Kernel(store=SqliteStore(sys.argv[1]))
 k.write("tool", "percepts", "COMMIT", "charge",
