@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from alethic_kernel.validators import EvidenceValidator, SymbolicValidator, ValidationResult
+from alethic.validators import EvidenceValidator, SymbolicValidator, ValidationResult
 
 
 class TestEvidenceValidator:

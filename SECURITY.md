@@ -18,7 +18,7 @@ Alethic is pre-1.0. Only the latest release receives security fixes.
 
 | Version | Supported |
 | ------- | --------- |
-| 0.1.x   | ✅        |
+| 0.3.x   | ✅        |
 
 ## Scope and Known Limitations
 
@@ -26,17 +26,6 @@ Alethic is a governance layer, so it is worth being precise about what it does
 and does not currently defend against. The following are **known** and are not
 useful as vulnerability reports — though better ideas for fixing them are very
 welcome, as issues or pull requests.
-
-### The HTTP API is unauthenticated
-
-The FastAPI service under `src/alethic_kernel/api/` is a development and evaluation tool.
-It has no authentication or authorization, every caller shares one kernel, and
-`role` is read from the request body — so a client can claim the `kernel` role
-and commit without validation. `trace_id` namespaces state but does not isolate
-it. Request bodies are unbounded and records are never evicted.
-
-Do not expose it to untrusted traffic. See
-[docs/http-api.md](docs/http-api.md#security).
 
 ### The permissions matrix is worker discipline, not a security boundary
 
@@ -47,10 +36,10 @@ Only give kernel access to code you trust.
 ### The library's threat model
 
 The library assumes a **trusted integrator** and an **untrusted model**. That
-second half is the part Alethic is built to handle: planner output is validated
-before commitment, and the agent rebuilds action payloads from tool data rather
-than trusting model-supplied fields, so prompt injection should not be able to
-push an unvalidated action through the kernel.
+second half is the part Alethic is built to handle: planner output is proposed
+to the kernel and must pass its validation pipeline before commitment. Alethic
+does not authenticate callers or prevent trusted application code from bypassing
+the kernel entirely.
 
 **A way to defeat that is exactly what we want to hear about.** If you can make
 the kernel commit a belief, action, or prediction that its validation pipeline

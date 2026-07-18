@@ -28,7 +28,7 @@ The `writes` field determines dependency ordering — workers that write to earl
 
 ## BaseWorker
 
-`alethic_kernel.worker.BaseWorker` — Convenience dataclass that satisfies the `Worker` protocol with no-op defaults:
+`alethic.worker.BaseWorker` — Convenience dataclass that satisfies the `Worker` protocol with no-op defaults:
 
 ```python
 @dataclass
@@ -49,7 +49,7 @@ Subclass `BaseWorker` and override `should_activate` and `step` to create custom
 
 ## SimulatorWorker
 
-`alethic_kernel.sim_worker.SimulatorWorker` — Evaluates declarative rules against the current blackboard view and proposes predictions through the kernel's `commit_prediction()` pipeline.
+`alethic.sim_worker.SimulatorWorker` — Evaluates declarative rules against the current blackboard view and proposes predictions through the kernel's `commit_prediction()` pipeline.
 
 ### SimRule
 
@@ -80,7 +80,7 @@ Conditions use `field__op` syntax for comparisons:
 ### Example
 
 ```python
-from alethic_kernel.sim_worker import SimulatorWorker, SimRule
+from alethic.sim_worker import SimulatorWorker, SimRule
 
 rules = [
     SimRule(
@@ -106,7 +106,7 @@ The simulator activates once beliefs exist, evaluates all rules, and proposes pr
 
 ## AdaptiveWorker
 
-`alethic_kernel.adaptive_worker.AdaptiveWorker` — Scans the store for invalidated records, counts failure patterns by reason code, and commits persistent constraints when a pattern exceeds a configurable threshold.
+`alethic.adaptive_worker.AdaptiveWorker` — Scans the store for invalidated records, counts failure patterns by reason code, and commits persistent constraints when a pattern exceeds a configurable threshold.
 
 ```python
 adaptive = AdaptiveWorker(failure_threshold=2)
@@ -140,7 +140,7 @@ On the next orchestrator run, the worker commits any queued constraints as persi
 
 ## Orchestrator
 
-`alethic_kernel.orchestrator.Orchestrator` — Runs workers in dependency-sorted order until quiescence or max rounds.
+`alethic.orchestrator.Orchestrator` — Runs workers in dependency-sorted order until quiescence or max rounds.
 
 ```python
 orch = Orchestrator(
@@ -178,8 +178,8 @@ Here's a complete example from the multi-episode demo — a sensor worker that c
 ```python
 from dataclasses import dataclass, field
 from typing import Any, Dict, FrozenSet
-from alethic_kernel.worker import BaseWorker
-from alethic_kernel.schema import Slot
+from alethic.worker import BaseWorker
+from alethic.schema import Slot
 
 @dataclass
 class SensorWorker(BaseWorker):

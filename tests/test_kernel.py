@@ -1,10 +1,10 @@
-"""Comprehensive tests for alethic_kernel/kernel.py — every public method, every code path."""
+"""Comprehensive tests for alethic/kernel.py — every public method, every code path."""
 from __future__ import annotations
 
 import pytest
 
-from alethic_kernel.kernel import Kernel
-from alethic_kernel.store import MemoryStore
+from alethic.kernel import Kernel
+from alethic.store import MemoryStore
 
 
 class TestKernelWrite:
@@ -676,7 +676,7 @@ class TestCommitPrediction:
 
 class TestKernelWithCustomStore:
     def test_sqlite_store(self, tmp_path, trace_id: str):
-        from alethic_kernel.sqlite_store import SqliteStore
+        from alethic.sqlite_store import SqliteStore
         store = SqliteStore(str(tmp_path / "kernel_test.db"))
         k = Kernel(store=store)
         k.write("tool", "percepts", "COMMIT", "charge",

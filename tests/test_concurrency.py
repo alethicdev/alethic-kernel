@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import threading
 
-from alethic_kernel.kernel import Kernel
-from alethic_kernel.store import MemoryStore
-from alethic_kernel.sqlite_store import SqliteStore
-from alethic_kernel.session import Session
+from alethic.kernel import Kernel
+from alethic.store import MemoryStore
+from alethic.sqlite_store import SqliteStore
+from alethic.session import Session
 
 from tests.helpers import make_record
 

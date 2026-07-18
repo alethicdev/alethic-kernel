@@ -17,14 +17,14 @@ import hashlib
 from dataclasses import dataclass, field
 from typing import Any, Dict, FrozenSet, List
 
-from alethic_kernel.kernel import Kernel
-from alethic_kernel.sqlite_store import SqliteStore
-from alethic_kernel.session import Session
-from alethic_kernel.orchestrator import Orchestrator
-from alethic_kernel.worker import BaseWorker
-from alethic_kernel.sim_worker import SimulatorWorker, SimRule
-from alethic_kernel.adaptive_worker import AdaptiveWorker
-from alethic_kernel.schema import Slot
+from alethic.kernel import Kernel
+from alethic.sqlite_store import SqliteStore
+from alethic.session import Session
+from alethic.orchestrator import Orchestrator
+from alethic.worker import BaseWorker
+from alethic.sim_worker import SimulatorWorker, SimRule
+from alethic.adaptive_worker import AdaptiveWorker
+from alethic.schema import Slot
 
 
 # ── Deterministic sensor simulation ─────────────────────────────────

@@ -18,8 +18,8 @@ Be respectful, inclusive, and professional. We're building trust in AI systems t
 
 1. **Fork and branch**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/alethic-kernel.git
-   cd alethic-kernel
+   git clone https://github.com/YOUR_USERNAME/alethic.git
+   cd alethic
    git checkout -b feature/your-feature-name
    ```
 
@@ -37,7 +37,7 @@ Be respectful, inclusive, and professional. We're building trust in AI systems t
 4. **Run tests and type checking**
    ```bash
    pytest tests/ -v
-   mypy --strict -p alethic_kernel
+   mypy --strict src
    ```
 
 5. **Commit with clear messages**
@@ -71,7 +71,7 @@ Be respectful, inclusive, and professional. We're building trust in AI systems t
 
 - Write tests in `tests/` with names prefixed `test_`
 - Use fixtures from `tests/conftest.py` where appropriate
-- Target coverage for new code; 349 tests provide a baseline
+- Preserve or improve coverage for every behavior you change
 
 ### Documentation
 
@@ -83,18 +83,16 @@ Be respectful, inclusive, and professional. We're building trust in AI systems t
 ## Project Structure
 
 ```
-src/alethic_kernel/    Installable package (kernel, API, agents, and evaluation)
-tests/                 Test suite (349 tests)
-docs/                  Documentation
-examples/              Multi-episode demo
+src/       Installable `alethic` package root
+tests/     Test suite
+docs/      Architecture and API documentation
+examples/  Domain-neutral examples
 ```
 
 ## Key Areas for Contribution
 
-- **New domains**: Create additional example domains beyond Stripe refunds
 - **Store backends**: Implement new `StoreProtocol` implementations (e.g., PostgreSQL)
-- **Workers**: Add specialized worker types for new use cases
-- **Tools**: Expand simulated tool library or create domain-specific tools
+- **Workers**: Improve the domain-neutral worker and orchestration protocols
 - **Documentation**: Tutorials, examples, deployment guides
 - **Performance**: Optimize kernel operations or store queries
 - **Type safety**: Improve type coverage or migrate from `Any` to specific types
