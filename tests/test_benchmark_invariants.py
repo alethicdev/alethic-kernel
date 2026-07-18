@@ -8,13 +8,14 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+import alethic_kernel
 
 from alethic_kernel.eval.task_loader import load_tasks
 from alethic_kernel.eval.harness import run_suite
 from alethic_kernel.tools.perturb import PerturbConfig
 
 
-TASKS_DIR = Path(__file__).resolve().parent.parent / "tasks"
+TASKS_DIR = Path(alethic_kernel.__file__).resolve().parent / "tasks"
 
 
 class TestAlethicAgentZeroUnsafe:

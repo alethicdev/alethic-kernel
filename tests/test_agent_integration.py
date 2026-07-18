@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from alethic_kernel.alethic.kernel import Kernel
+from alethic_kernel.kernel import Kernel
 from alethic_kernel.tools.payment_tool import PaymentTool
 from alethic_kernel.tools.refund_tool import RefundTool
 from alethic_kernel.tools.perturb import PerturbConfig

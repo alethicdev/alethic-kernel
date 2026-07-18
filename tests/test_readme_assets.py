@@ -16,7 +16,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 README = REPO / "README.md"
-RAW_PREFIX = "https://raw.githubusercontent.com/alethicdev/alethic/main/"
+RAW_PREFIX = "https://raw.githubusercontent.com/alethicdev/alethic-kernel/main/"
 
 
 def _img_srcs(text: str) -> list[str]:

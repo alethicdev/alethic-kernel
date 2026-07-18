@@ -1,7 +1,7 @@
-"""Tests for alethic/session.py."""
+"""Tests for alethic_kernel/session.py."""
 from __future__ import annotations
 
-from alethic_kernel.alethic.session import Session
+from alethic_kernel.session import Session
 
 
 class TestSession:

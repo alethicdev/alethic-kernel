@@ -18,8 +18,8 @@ Be respectful, inclusive, and professional. We're building trust in AI systems t
 
 1. **Fork and branch**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/alethic.git
-   cd alethic
+   git clone https://github.com/YOUR_USERNAME/alethic-kernel.git
+   cd alethic-kernel
    git checkout -b feature/your-feature-name
    ```
 
@@ -37,7 +37,7 @@ Be respectful, inclusive, and professional. We're building trust in AI systems t
 4. **Run tests and type checking**
    ```bash
    pytest tests/ -v
-   mypy --strict -p alethic_kernel.alethic -p alethic_kernel.llm -p alethic_kernel.agents -p alethic_kernel.eval -p alethic_kernel.tools
+   mypy --strict -p alethic_kernel
    ```
 
 5. **Commit with clear messages**
@@ -83,12 +83,7 @@ Be respectful, inclusive, and professional. We're building trust in AI systems t
 ## Project Structure
 
 ```
-alethic/               Core kernel (domain-agnostic)
-agents/                Reference agents (string_glue, json_glue, alethic, llm)
-eval/                  Evaluation harness and metrics
-llm/                   LLM planner (OpenAI-compatible API client)
-tools/                 Simulated tools and perturbations
-tasks/                 Task definitions (YAML)
+src/alethic_kernel/    Installable package (kernel, API, agents, and evaluation)
 tests/                 Test suite (349 tests)
 docs/                  Documentation
 examples/              Multi-episode demo

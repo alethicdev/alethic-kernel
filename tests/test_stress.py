@@ -9,19 +9,21 @@ from __future__ import annotations
 
 import threading
 import time
+from pathlib import Path
 from typing import Any, Dict, List
 
 import pytest
+import alethic_kernel
 
-from alethic_kernel.alethic.kernel import Kernel
-from alethic_kernel.alethic.store import MemoryStore
-from alethic_kernel.alethic.sqlite_store import SqliteStore
-from alethic_kernel.alethic.session import Session
-from alethic_kernel.alethic.orchestrator import Orchestrator, OrchestratorResult
-from alethic_kernel.alethic.worker import BaseWorker
-from alethic_kernel.alethic.adaptive_worker import AdaptiveWorker
-from alethic_kernel.alethic.sim_worker import SimulatorWorker, SimRule
-from alethic_kernel.alethic.schema import Slot
+from alethic_kernel.kernel import Kernel
+from alethic_kernel.store import MemoryStore
+from alethic_kernel.sqlite_store import SqliteStore
+from alethic_kernel.session import Session
+from alethic_kernel.orchestrator import Orchestrator, OrchestratorResult
+from alethic_kernel.worker import BaseWorker
+from alethic_kernel.adaptive_worker import AdaptiveWorker
+from alethic_kernel.sim_worker import SimulatorWorker, SimRule
+from alethic_kernel.schema import Slot
 from alethic_kernel.agents.alethic_agent import AlethicAgent
 from alethic_kernel.agents.string_glue import StringGlueAgent
 from alethic_kernel.tools.perturb import PerturbConfig
@@ -36,6 +38,7 @@ from tests.helpers import make_record
 
 THREADS = 20
 OPS_PER_THREAD = 200
+TASKS_DIR = Path(alethic_kernel.__file__).resolve().parent / "tasks"
 
 
 # =====================================================================
@@ -542,9 +545,7 @@ class TestHarnessStress:
 
     def test_high_seed_count(self):
         """100 seeds x 6 tasks x 3 agents = 1800 episodes."""
-        from pathlib import Path
-        tasks_dir = Path(__file__).resolve().parent.parent / "tasks"
-        tasks = load_tasks(tasks_dir)
+        tasks = load_tasks(TASKS_DIR)
         assert len(tasks) == 6
 
         cfg = PerturbConfig(
@@ -566,9 +567,7 @@ class TestHarnessStress:
 
     def test_extreme_perturbation_rates(self):
         """All perturbation rates at 100% — everything fails."""
-        from pathlib import Path
-        tasks_dir = Path(__file__).resolve().parent.parent / "tasks"
-        tasks = load_tasks(tasks_dir)
+        tasks = load_tasks(TASKS_DIR)
 
         cfg = PerturbConfig(
             tool_drop_rate=1.0,
@@ -626,7 +625,7 @@ class TestAPIConcurrentStress:
 
     @pytest.fixture(autouse=True)
     def _reset(self) -> None:
-        from alethic_kernel.alethic.api.dependencies import reset_shared_state
+        from alethic_kernel.api.dependencies import reset_shared_state
         reset_shared_state()
         yield  # type: ignore[misc]
         reset_shared_state()
@@ -634,7 +633,7 @@ class TestAPIConcurrentStress:
     @pytest.fixture
     def client(self) -> Any:
         from fastapi.testclient import TestClient
-        from alethic_kernel.alethic.api.app import create_app
+        from alethic_kernel.api.app import create_app
         return TestClient(create_app())
 
     def test_concurrent_writes_via_api(self, client: Any) -> None:

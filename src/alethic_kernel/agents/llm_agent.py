@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 import sys
 import uuid
 
-from ..alethic.kernel import Kernel
+from ..kernel import Kernel
 from ..tools.payment_tool import PaymentTool
 from ..tools.refund_tool import RefundTool
 from ..llm.planner import propose_belief, propose_plan, propose_action

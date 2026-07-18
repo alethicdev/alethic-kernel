@@ -4,7 +4,7 @@ Complete reference for all public classes and methods in the `alethic` package.
 
 ## Kernel
 
-`alethic_kernel.alethic.kernel.Kernel` — The central orchestrator. Manages the blackboard, enforces permissions, and runs validation pipelines.
+`alethic_kernel.kernel.Kernel` — The central orchestrator. Manages the blackboard, enforces permissions, and runs validation pipelines.
 
 ### Constructor
 
@@ -164,7 +164,7 @@ Validate and commit an action proposal. Optionally gates on predictions.
 
 ### `Record`
 
-`alethic_kernel.alethic.schema.Record` — A single entry on the blackboard.
+`alethic_kernel.schema.Record` — A single entry on the blackboard.
 
 ```python
 @dataclass
@@ -183,7 +183,7 @@ class Record:
 
 ### `Provenance`
 
-`alethic_kernel.alethic.schema.Provenance` — Metadata attached to every record.
+`alethic_kernel.schema.Provenance` — Metadata attached to every record.
 
 ```python
 @dataclass
@@ -209,7 +209,7 @@ WriteMode = Literal["PROPOSE", "COMMIT"]
 
 ### `StoreProtocol`
 
-`alethic_kernel.alethic.store_protocol.StoreProtocol` — Interface that any backing store must satisfy. Decorated with `@runtime_checkable`.
+`alethic_kernel.store_protocol.StoreProtocol` — Interface that any backing store must satisfy. Decorated with `@runtime_checkable`.
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
@@ -222,13 +222,13 @@ WriteMode = Literal["PROPOSE", "COMMIT"]
 
 ### `MemoryStore`
 
-`alethic_kernel.alethic.store.MemoryStore` — In-process thread-safe store. Implements `StoreProtocol`. Uses `threading.RLock` for concurrency.
+`alethic_kernel.store.MemoryStore` — In-process thread-safe store. Implements `StoreProtocol`. Uses `threading.RLock` for concurrency.
 
 Constructor: `MemoryStore()` — no parameters.
 
 ### `SqliteStore`
 
-`alethic_kernel.alethic.sqlite_store.SqliteStore` — SQLite-backed persistent store. WAL mode, indexed queries.
+`alethic_kernel.sqlite_store.SqliteStore` — SQLite-backed persistent store. WAL mode, indexed queries.
 
 Constructor:
 
@@ -251,7 +251,7 @@ Implements all `StoreProtocol` methods plus:
 
 ### `ValidationResult`
 
-`alethic_kernel.alethic.validators.ValidationResult` — Result of a validation check.
+`alethic_kernel.validators.ValidationResult` — Result of a validation check.
 
 ```python
 @dataclass
@@ -264,7 +264,7 @@ class ValidationResult:
 
 ### `EvidenceValidator`
 
-`alethic_kernel.alethic.validators.EvidenceValidator` — Checks whether beliefs are supported by evidence.
+`alethic_kernel.validators.EvidenceValidator` — Checks whether beliefs are supported by evidence.
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
@@ -274,7 +274,7 @@ Codes: `OK`, `MISSING_EVIDENCE`, `STALE_EVIDENCE`, `CONFLICTING_EVIDENCE`
 
 ### `SymbolicValidator`
 
-`alethic_kernel.alethic.validators.SymbolicValidator` — Checks whether actions satisfy beliefs and constraints.
+`alethic_kernel.validators.SymbolicValidator` — Checks whether actions satisfy beliefs and constraints.
 
 | Method | Signature | Description |
 |--------|-----------|-------------|
@@ -294,7 +294,7 @@ Role = Literal["kernel", "tool", "planner", "symbolic_validator", "evidence_vali
 
 ### `PERMISSIONS`
 
-`alethic_kernel.alethic.permissions.PERMISSIONS` — Maps each role to its allowed slot+mode combinations.
+`alethic_kernel.permissions.PERMISSIONS` — Maps each role to its allowed slot+mode combinations.
 
 | Role | percepts | beliefs | constraints | plans | evidence | predictions | actions |
 |------|----------|---------|-------------|-------|----------|-------------|---------|
@@ -309,7 +309,7 @@ Role = Literal["kernel", "tool", "planner", "symbolic_validator", "evidence_vali
 
 ## Session
 
-`alethic_kernel.alethic.session.Session` — Groups multiple episodes under a single persistent context.
+`alethic_kernel.session.Session` — Groups multiple episodes under a single persistent context.
 
 ```python
 @dataclass

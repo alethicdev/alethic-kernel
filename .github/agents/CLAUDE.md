@@ -50,10 +50,10 @@ pytest tests/ -v
 pytest tests/test_kernel.py -v
 
 # Coverage report
-pytest --cov=alethic --cov-report=term-missing
+pytest --cov=alethic_kernel --cov-report=term-missing
 
 # Type checking (strict mode, 0 errors across 37 source files)
-mypy --strict -p alethic_kernel.alethic -p alethic_kernel.llm -p alethic_kernel.agents -p alethic_kernel.eval -p alethic_kernel.tools
+mypy --strict -p alethic_kernel
 ```
 
 ## CLI Subcommands
@@ -91,7 +91,7 @@ Endpoints: `/healthz`, `/readyz`, `/v1/write`, `/v1/commit/belief`, `/v1/commit/
 ## Python Client
 
 ```python
-from alethic_kernel.alethic import AlethicClient
+from alethic_kernel import AlethicClient
 
 # Local mode (in-process kernel, no network)
 client = AlethicClient(mode="local")
@@ -104,7 +104,7 @@ result = client.run_episode(task_inputs={...})
 
 ## Architecture
 
-### Core Kernel (`alethic/`) — Cognitive Substrate
+### Core Kernel (`src/alethic_kernel/`) — Cognitive Substrate
 
 The Blackboard Kernel (`kernel.py`) is the central orchestrator. It manages seven semantic slots: `percepts`, `beliefs`, `constraints`, `plans`, `evidence`, `predictions`, `actions`. Records are written in two modes: `PROPOSE` (tentative) or `COMMIT` (finalized). The kernel contains zero domain-specific logic.
 
@@ -133,11 +133,11 @@ Key kernel capabilities:
 - **Pluggable store**: kernel accepts any `StoreProtocol` implementation (defaults to `MemoryStore`)
 - **Worker orchestration**: `Orchestrator` runs workers in dependency order until quiescence or max rounds
 
-### LLM Planner (`llm/`)
+### LLM Planner (`src/alethic_kernel/llm/`)
 
 - **`planner.py`** — OpenAI-compatible chat completion client using `urllib` (no external packages). Provides `propose_belief()`, `propose_plan()`, `propose_action()`. Supports `api_key` (Bearer auth) and `reasoning_effort` (passed through to request body) for remote endpoints. Includes `_strip_think()` and `_extract_json()` for robust response parsing. Default endpoint: `localhost:11434` (Ollama), default model: `qwen3:8b`.
 
-### Agents (`agents/`)
+### Agents (`src/alethic_kernel/agents/`)
 
 Four agents of increasing sophistication:
 - **`string_glue.py`** — Baseline: always acts, no validation
@@ -145,20 +145,20 @@ Four agents of increasing sophistication:
 - **`alethic_agent.py`** — Full kernel orchestration with deterministic planner
 - **`llm_agent.py`** — Full kernel orchestration with LLM planner. The LLM decides *whether* to propose; the agent governs belief names, dependencies, and action fields. The kernel validation pipeline is identical to the deterministic agent.
 
-### Evaluation (`eval/`)
+### Evaluation (`src/alethic_kernel/eval/`)
 
-- **`task_loader.py`** — Loads YAML/JSON task definitions from `tasks/`
+- **`task_loader.py`** — Loads YAML/JSON task definitions from `src/alethic_kernel/tasks/`
 - **`harness.py`** — `run_suite()` iterates over tasks x seeds x agents
 - **`metrics.py`** — Computes `task_success`, `unsafe_action`, `unsupported_belief`, `traceability`, `failure_transparency`. Evidence is "tainted" if stale, conflicting, or low-confidence. Constraint violations (e.g., duplicate refund with `no_duplicate_refund` active) are also detected.
 - **`report.py`** — Renders markdown summary tables
 
-### Tools (`tools/`)
+### Tools (`src/alethic_kernel/tools/`)
 
 Simulated external tools with deterministic perturbation via seed+key hashing (`perturb.py`):
 - **`payment_tool.py`** — Stripe charge lookup with configurable perturbation rates for staleness, conflict, low confidence, and tool failure
 - **`refund_tool.py`** — Stripe refund renderer with duplicate detection
 
-### Task Definitions (`tasks/`)
+### Task Definitions (`src/alethic_kernel/tasks/`)
 
 6 Stripe payment refund tasks exercising different failure modes. Tasks are JSON files (`.yaml` extension) with declarative constraints:
 ```json

@@ -57,7 +57,7 @@ def _cmd_serve(args: argparse.Namespace) -> None:
     if args.db_path:
         os.environ["ALETHIC_DB_PATH"] = args.db_path
     uvicorn.run(
-        "alethic_kernel.alethic.api.app:create_app",
+        "alethic_kernel.api.app:create_app",
         factory=True,
         host=args.host,
         port=args.port,
@@ -68,7 +68,7 @@ def _cmd_serve(args: argparse.Namespace) -> None:
 def _cmd_migrate(args: argparse.Namespace) -> None:
     """Run schema migrations on a SQLite database."""
     import sqlite3
-    from .alethic.migrations import migrate
+    from .migrations import migrate
 
     db_path = args.db_path
     conn = sqlite3.connect(db_path)

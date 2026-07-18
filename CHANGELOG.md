@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - Unreleased
+
+### Changed
+
+- Flattened the public Python namespace from `alethic_kernel.alethic` to
+  `alethic_kernel`.
+- Moved the installable package into the conventional `src/alethic_kernel`
+  layout.
+- Renamed the source repository to `alethicdev/alethic-kernel` so the GitHub,
+  PyPI, and Python package names describe the same artifact.
+
 ## [0.1.0] - 2026-07-16
 
 ### Added

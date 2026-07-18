@@ -29,7 +29,7 @@ welcome, as issues or pull requests.
 
 ### The HTTP API is unauthenticated
 
-The FastAPI service under `alethic/api/` is a development and evaluation tool.
+The FastAPI service under `src/alethic_kernel/api/` is a development and evaluation tool.
 It has no authentication or authorization, every caller shares one kernel, and
 `role` is read from the request body — so a client can claim the `kernel` role
 and commit without validation. `trace_id` namespaces state but does not isolate

@@ -9,15 +9,15 @@ from pathlib import Path
 
 import pytest
 
-# The project root is alethic_kernel/, its parent must be on PYTHONPATH for
-# `python -m alethic_kernel.run` to resolve.
-_PROJECT_PARENT = str(Path(__file__).resolve().parent.parent.parent)
+# Exercise the source tree directly so the subprocess cannot accidentally use
+# an older globally installed wheel.
+_PROJECT_SRC = str(Path(__file__).resolve().parent.parent / "src")
 
 
 def _run_cli(*args: str, timeout: int = 30) -> subprocess.CompletedProcess[str]:
     """Run a CLI command with the correct PYTHONPATH."""
     env = os.environ.copy()
-    env["PYTHONPATH"] = _PROJECT_PARENT + os.pathsep + env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = _PROJECT_SRC + os.pathsep + env.get("PYTHONPATH", "")
     return subprocess.run(
         [sys.executable, "-m", "alethic_kernel.run", *args],
         capture_output=True, text=True, timeout=timeout, env=env,

@@ -132,5 +132,5 @@ pytest tests/test_kernel.py -v
 pytest --cov=alethic --cov-report=term-missing
 
 # Type checking (strict mode, 0 errors across 37 source files)
-mypy --strict -p alethic_kernel.alethic -p alethic_kernel.llm -p alethic_kernel.agents -p alethic_kernel.eval -p alethic_kernel.tools
+mypy --strict -p alethic_kernel
 ```

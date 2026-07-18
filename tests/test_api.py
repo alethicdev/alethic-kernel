@@ -6,8 +6,8 @@ import json
 import pytest
 from fastapi.testclient import TestClient
 
-from alethic_kernel.alethic.api.app import create_app
-from alethic_kernel.alethic.api.dependencies import reset_shared_state
+from alethic_kernel.api.app import create_app
+from alethic_kernel.api.dependencies import reset_shared_state
 
 
 @pytest.fixture(autouse=True)

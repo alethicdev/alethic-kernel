@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from alethic_kernel.alethic.client import AlethicClient, EpisodeResult
+from alethic_kernel.client import AlethicClient, EpisodeResult
 
 
 class TestClientLocal:
@@ -160,6 +160,6 @@ class TestClientHTTPMode:
 class TestStoreClose:
     def test_memory_store_close(self):
         """MemoryStore.close() is a no-op but satisfies the protocol."""
-        from alethic_kernel.alethic.store import MemoryStore
+        from alethic_kernel.store import MemoryStore
         store = MemoryStore()
         store.close()  # should not raise

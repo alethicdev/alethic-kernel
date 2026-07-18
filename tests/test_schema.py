@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from alethic_kernel.alethic.schema import Record, Provenance, Slot, WriteMode
+from alethic_kernel.schema import Record, Provenance, Slot, WriteMode
 
 
 class TestProvenance:

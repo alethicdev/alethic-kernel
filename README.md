@@ -16,7 +16,7 @@ The core insight: architectural governance — not model scale — is the primar
   <!-- Absolute: PyPI renders this README with no repository to resolve a
        relative path against. Safe now that the repo is public — GitHub fetches
        README images anonymously, which is why this had to stay relative before. -->
-  <img src="https://raw.githubusercontent.com/alethicdev/alethic/main/docs/architecture.png" alt="Blackboard Kernel Architecture" width="720">
+  <img src="https://raw.githubusercontent.com/alethicdev/alethic-kernel/main/docs/architecture.png" alt="Blackboard Kernel Architecture" width="720">
 </p>
 
 Seven semantic slots hold all state. Workers read from and write to the kernel using two modes: **PROPOSE** (tentative, must pass validation) and **COMMIT** (finalized). Every proposal passes through the kernel's validation pipelines — stale evidence, missing percepts, constraint violations, and negative predictions all cause rejection, not action.
@@ -30,7 +30,7 @@ pip install alethic-kernel
 ### Use as a library
 
 ```python
-from alethic_kernel.alethic import AlethicClient
+from alethic_kernel import AlethicClient
 
 client = AlethicClient(mode="local")
 result = client.run_episode(task_inputs={
@@ -81,41 +81,36 @@ The kernel-backed agents (`alethic` and `llm_bk`) achieve **zero unsafe actions*
 
 ## Documentation
 
-- **[Architecture](https://github.com/alethicdev/alethic/blob/main/docs/architecture.md)** — Blackboard kernel design, semantic slots, validation pipelines
-- **[API Reference](https://github.com/alethicdev/alethic/blob/main/docs/api-reference.md)** — Every public class and method with signatures and return codes
-- **[Workers](https://github.com/alethicdev/alethic/blob/main/docs/workers.md)** — Worker protocol, built-in workers, writing custom workers
-- **[HTTP API](https://github.com/alethicdev/alethic/blob/main/docs/http-api.md)** — REST endpoints, AlethicClient SDK, OpenTelemetry
-- **[Benchmark](https://github.com/alethicdev/alethic/blob/main/docs/benchmark.md)** — Tasks, perturbations, metrics, CLI reference
-- **[Deployment](https://github.com/alethicdev/alethic/blob/main/docs/deployment.md)** — Docker, environment variables, store selection, testing
+- **[Architecture](https://github.com/alethicdev/alethic-kernel/blob/main/docs/architecture.md)** — Blackboard kernel design, semantic slots, validation pipelines
+- **[API Reference](https://github.com/alethicdev/alethic-kernel/blob/main/docs/api-reference.md)** — Every public class and method with signatures and return codes
+- **[Workers](https://github.com/alethicdev/alethic-kernel/blob/main/docs/workers.md)** — Worker protocol, built-in workers, writing custom workers
+- **[HTTP API](https://github.com/alethicdev/alethic-kernel/blob/main/docs/http-api.md)** — REST endpoints, AlethicClient SDK, OpenTelemetry
+- **[Benchmark](https://github.com/alethicdev/alethic-kernel/blob/main/docs/benchmark.md)** — Tasks, perturbations, metrics, CLI reference
+- **[Deployment](https://github.com/alethicdev/alethic-kernel/blob/main/docs/deployment.md)** — Docker, environment variables, store selection, testing
 
 ## Project Structure
 
 ```
-alethic/               Core kernel (domain-agnostic)
-  kernel.py            Blackboard kernel — central orchestrator
-  schema.py            Record, Provenance, Slot, WriteMode
-  validators.py        Evidence and symbolic validation
-  store.py             In-memory store
-  sqlite_store.py      SQLite-backed persistent store
-  orchestrator.py      Worker round-robin loop
-  sim_worker.py        Rule-based forward simulator
-  adaptive_worker.py   Learns constraints from failure patterns
-  session.py           Multi-episode session management
-  client.py            AlethicClient (local + HTTP modes)
-  api/                 FastAPI server
-agents/                Four agents of increasing sophistication
-  string_glue.py       Baseline: always acts, no validation
-  json_glue.py         Adds confidence scores, still always acts
-  alethic_agent.py     Full kernel with deterministic planner
-  llm_agent.py         Full kernel with LLM planner
-eval/                  Evaluation framework
-  harness.py           Task x seed x agent runner
-  metrics.py           5 safety and traceability metrics
-  report.py            Markdown report generation
-tools/                 Simulated tools with perturbations
-tasks/                 6 Stripe refund task definitions (YAML)
-examples/              Multi-episode demo with adaptive learning
-results/               Benchmark outputs (JSONL + report)
+src/alethic_kernel/     Installable Python package
+  kernel.py             Blackboard kernel — central orchestrator
+  schema.py             Record, Provenance, Slot, WriteMode
+  validators.py         Evidence and symbolic validation
+  store.py              In-memory store
+  sqlite_store.py       SQLite-backed persistent store
+  orchestrator.py       Worker round-robin loop
+  sim_worker.py         Rule-based forward simulator
+  adaptive_worker.py    Learns constraints from failure patterns
+  session.py            Multi-episode session management
+  client.py             AlethicClient (local + HTTP modes)
+  api/                  FastAPI server
+  agents/               Four reference agents
+  eval/                 Evaluation harness and metrics
+  llm/                  OpenAI-compatible planner
+  tools/                Simulated tools with perturbations
+  tasks/                6 Stripe refund task definitions (YAML)
+examples/               Multi-episode demos
+tests/                  Test suite
+docs/                   Architecture, API, and deployment guides
 ```
 
 ## Research Paper

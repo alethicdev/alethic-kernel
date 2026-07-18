@@ -135,8 +135,8 @@ store must guarantee.
 Pass a store to the kernel constructor:
 
 ```python
-from alethic_kernel.alethic.kernel import Kernel
-from alethic_kernel.alethic.sqlite_store import SqliteStore
+from alethic_kernel.kernel import Kernel
+from alethic_kernel.sqlite_store import SqliteStore
 
 store = SqliteStore("blackboard.db")
 kernel = Kernel(store=store)

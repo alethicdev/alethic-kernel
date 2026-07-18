@@ -1,9 +1,9 @@
-"""Tests for alethic/adaptive_worker.py."""
+"""Tests for alethic_kernel/adaptive_worker.py."""
 from __future__ import annotations
 
-from alethic_kernel.alethic.kernel import Kernel
-from alethic_kernel.alethic.store import MemoryStore
-from alethic_kernel.alethic.adaptive_worker import AdaptiveWorker
+from alethic_kernel.kernel import Kernel
+from alethic_kernel.store import MemoryStore
+from alethic_kernel.adaptive_worker import AdaptiveWorker
 
 from tests.helpers import make_record
 

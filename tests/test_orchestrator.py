@@ -1,13 +1,13 @@
-"""Tests for alethic/orchestrator.py."""
+"""Tests for alethic_kernel/orchestrator.py."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, FrozenSet
 
-from alethic_kernel.alethic.kernel import Kernel
-from alethic_kernel.alethic.orchestrator import Orchestrator, OrchestratorResult
-from alethic_kernel.alethic.worker import BaseWorker
-from alethic_kernel.alethic.schema import Slot
+from alethic_kernel.kernel import Kernel
+from alethic_kernel.orchestrator import Orchestrator, OrchestratorResult
+from alethic_kernel.worker import BaseWorker
+from alethic_kernel.schema import Slot
 
 
 @dataclass

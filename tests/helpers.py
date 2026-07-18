@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 
-from alethic_kernel.alethic.schema import Record, Provenance
+from alethic_kernel.schema import Record, Provenance
 
 
 def make_record(

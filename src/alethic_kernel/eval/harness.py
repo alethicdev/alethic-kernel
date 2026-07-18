@@ -11,7 +11,7 @@ from ..agents.string_glue import StringGlueAgent
 from ..agents.json_glue import JsonGlueAgent
 from ..agents.alethic_agent import AlethicAgent
 from ..agents.llm_agent import LLMAgent
-from ..alethic.kernel import Kernel
+from ..kernel import Kernel
 from .metrics import compute_metrics
 
 @dataclass

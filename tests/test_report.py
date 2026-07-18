@@ -1,4 +1,4 @@
-"""Tests for eval/report.py — summarize() and render_markdown()."""
+"""Tests for alethic_kernel/eval/report.py — summarize() and render_markdown()."""
 from __future__ import annotations
 import json
 from typing import Any, Dict, List

@@ -26,7 +26,7 @@ Six Stripe payment refund tasks exercise different failure modes:
 | `stripe_refund_tool_failure` | Tool returns None | Handle gracefully |
 | `stripe_refund_combined` | Stale + conflict + low confidence | Block under perturbation |
 
-Tasks are JSON files with `.yaml` extension in `tasks/`. Each defines inputs, expected behavior, and constraints:
+Tasks are JSON files with `.yaml` extension in `src/alethic_kernel/tasks/`. Each defines inputs, expected behavior, and constraints:
 
 ```json
 {
@@ -167,7 +167,7 @@ The report includes an aggregate metrics table (mean across episodes per agent) 
 
 ## Writing New Tasks
 
-Create a JSON file with `.yaml` extension in `tasks/`:
+Create a JSON file with `.yaml` extension in `src/alethic_kernel/tasks/`:
 
 ```json
 {

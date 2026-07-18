@@ -265,12 +265,12 @@ Response:
 
 ## AlethicClient SDK
 
-`alethic_kernel.alethic.AlethicClient` — Unified Python client that works identically in local and HTTP modes.
+`alethic_kernel.AlethicClient` — Unified Python client that works identically in local and HTTP modes.
 
 ### Constructor
 
 ```python
-from alethic_kernel.alethic import AlethicClient
+from alethic_kernel import AlethicClient
 
 client = AlethicClient(
     mode="local",                          # "local" or "http"
@@ -320,7 +320,7 @@ These mirror the kernel methods and work in both modes:
 ### Local Mode Example
 
 ```python
-from alethic_kernel.alethic import AlethicClient
+from alethic_kernel import AlethicClient
 
 client = AlethicClient(mode="local")
 
@@ -337,7 +337,7 @@ ok, code = client.commit_belief("beliefs:ep-001:1", "ep-001")
 ### HTTP Mode Example
 
 ```python
-from alethic_kernel.alethic import AlethicClient
+from alethic_kernel import AlethicClient
 
 client = AlethicClient(mode="http", base_url="http://localhost:8000")
 

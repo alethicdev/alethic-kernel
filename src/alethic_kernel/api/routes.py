@@ -111,11 +111,11 @@ def get_view(trace_id: str, include_persistent: bool = False) -> ViewResponse:
 @router.post("/v1/episode", response_model=EpisodeResponse)
 def run_episode(req: EpisodeRequest) -> EpisodeResponse:
     """Run a full agent episode. Creates a fresh kernel per request."""
-    from ...tools.payment_tool import PaymentTool
-    from ...tools.refund_tool import RefundTool
-    from ...tools.perturb import PerturbConfig
-    from ...agents.alethic_agent import AlethicAgent
-    from ...eval.metrics import compute_metrics
+    from ..tools.payment_tool import PaymentTool
+    from ..tools.refund_tool import RefundTool
+    from ..tools.perturb import PerturbConfig
+    from ..agents.alethic_agent import AlethicAgent
+    from ..eval.metrics import compute_metrics
 
     with span("episode", agent=req.agent):
         kernel = get_ephemeral_kernel()

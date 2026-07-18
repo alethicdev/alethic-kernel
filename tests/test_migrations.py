@@ -5,10 +5,10 @@ import sqlite3
 
 import pytest
 
-from alethic_kernel.alethic.migrations import (
+from alethic_kernel.migrations import (
     MIGRATIONS, _current_version, _ensure_version_table, migrate,
 )
-from alethic_kernel.alethic.sqlite_store import SqliteStore
+from alethic_kernel.sqlite_store import SqliteStore
 
 from tests.helpers import make_record
 

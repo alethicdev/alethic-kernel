@@ -13,8 +13,8 @@ import time
 
 import pytest
 
-from alethic_kernel.alethic.kernel import Kernel
-from alethic_kernel.alethic.schema import Provenance, Record
+from alethic_kernel.kernel import Kernel
+from alethic_kernel.schema import Provenance, Record
 
 
 def _record(rec_id: str, kind: str, ts_ms: int, ttl_ms: int | None,

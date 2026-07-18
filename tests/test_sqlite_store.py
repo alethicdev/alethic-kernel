@@ -3,8 +3,8 @@ from __future__ import annotations
 import time
 import pytest
 
-from alethic_kernel.alethic.sqlite_store import SqliteStore
-from alethic_kernel.alethic.schema import Record, Provenance
+from alethic_kernel.sqlite_store import SqliteStore
+from alethic_kernel.schema import Record, Provenance
 
 from tests.helpers import make_record
 

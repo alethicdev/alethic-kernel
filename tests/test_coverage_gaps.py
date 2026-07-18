@@ -9,17 +9,17 @@ from typing import Any, Dict
 import pytest
 from fastapi.testclient import TestClient
 
-from alethic_kernel.alethic.adaptive_worker import AdaptiveWorker
-from alethic_kernel.alethic.api.app import create_app
-from alethic_kernel.alethic.api.dependencies import reset_shared_state
-from alethic_kernel.alethic.client import AlethicClient
-from alethic_kernel.alethic.kernel import Kernel
-from alethic_kernel.alethic.orchestrator import Orchestrator
-from alethic_kernel.alethic.schema import Record, Provenance
-from alethic_kernel.alethic.sim_worker import SimRule, SimulatorWorker
-from alethic_kernel.alethic.sqlite_store import SqliteStore
-from alethic_kernel.alethic.store import MemoryStore
-from alethic_kernel.alethic.worker import BaseWorker
+from alethic_kernel.adaptive_worker import AdaptiveWorker
+from alethic_kernel.api.app import create_app
+from alethic_kernel.api.dependencies import reset_shared_state
+from alethic_kernel.client import AlethicClient
+from alethic_kernel.kernel import Kernel
+from alethic_kernel.orchestrator import Orchestrator
+from alethic_kernel.schema import Record, Provenance
+from alethic_kernel.sim_worker import SimRule, SimulatorWorker
+from alethic_kernel.sqlite_store import SqliteStore
+from alethic_kernel.store import MemoryStore
+from alethic_kernel.worker import BaseWorker
 
 from tests.helpers import make_record
 
@@ -232,7 +232,7 @@ class TestAPILifespan:
 class TestTracingWithOTel:
     def test_span_with_mocked_tracer(self):
         """Exercise the OTel branch by patching module globals."""
-        import alethic_kernel.alethic.api.tracing as tracing_mod
+        import alethic_kernel.api.tracing as tracing_mod
 
         mock_span = mock.MagicMock()
         mock_span.__enter__ = mock.MagicMock(return_value=mock_span)
@@ -257,7 +257,7 @@ class TestTracingWithOTel:
 
     def test_span_noop_when_disabled(self):
         """Exercise the no-op branch (tracing.py:25) by disabling OTel."""
-        import alethic_kernel.alethic.api.tracing as tracing_mod
+        import alethic_kernel.api.tracing as tracing_mod
 
         old_has_otel = tracing_mod._HAS_OTEL
         old_tracer = tracing_mod._tracer

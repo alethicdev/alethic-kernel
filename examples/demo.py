@@ -22,14 +22,14 @@ Sections:
 from __future__ import annotations
 import time
 
-from alethic_kernel.alethic.kernel import Kernel
-from alethic_kernel.alethic.store import MemoryStore
-from alethic_kernel.alethic.sqlite_store import SqliteStore
-from alethic_kernel.alethic.session import Session
-from alethic_kernel.alethic.orchestrator import Orchestrator
-from alethic_kernel.alethic.sim_worker import SimulatorWorker, SimRule
-from alethic_kernel.alethic.adaptive_worker import AdaptiveWorker
-from alethic_kernel.alethic.client import AlethicClient
+from alethic_kernel.kernel import Kernel
+from alethic_kernel.store import MemoryStore
+from alethic_kernel.sqlite_store import SqliteStore
+from alethic_kernel.session import Session
+from alethic_kernel.orchestrator import Orchestrator
+from alethic_kernel.sim_worker import SimulatorWorker, SimRule
+from alethic_kernel.adaptive_worker import AdaptiveWorker
+from alethic_kernel.client import AlethicClient
 from alethic_kernel.tools.perturb import PerturbConfig
 from alethic_kernel.tools.payment_tool import PaymentTool
 from alethic_kernel.tools.refund_tool import RefundTool

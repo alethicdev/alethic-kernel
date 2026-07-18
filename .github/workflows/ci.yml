@@ -10,19 +10,12 @@ jobs:
   test:
     name: Test and Type Check
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: alethic_kernel
     strategy:
       matrix:
         python-version: ['3.11', '3.12']
 
     steps:
-      # mypy resolves `-p alethic_kernel.*` via mypy_path="..", so the checkout
-      # directory must be named after the package rather than the repo.
       - uses: actions/checkout@v4
-        with:
-          path: alethic_kernel
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -38,4 +31,4 @@ jobs:
         run: pytest tests/ -v --tb=short
 
       - name: Run type checking (mypy)
-        run: mypy --strict -p alethic_kernel.alethic -p alethic_kernel.llm -p alethic_kernel.agents -p alethic_kernel.eval -p alethic_kernel.tools
+        run: mypy --strict -p alethic_kernel

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Any, Dict
 import uuid
 
-from ..alethic.kernel import Kernel
+from ..kernel import Kernel
 from ..tools.payment_tool import PaymentTool
 from ..tools.refund_tool import RefundTool
 

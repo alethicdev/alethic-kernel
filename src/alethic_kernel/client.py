@@ -196,11 +196,11 @@ class AlethicClient:
         task_inputs: Dict[str, Any],
         constraints: Dict[str, Any],
     ) -> EpisodeResult:
-        from ..tools.payment_tool import PaymentTool
-        from ..tools.refund_tool import RefundTool
-        from ..tools.perturb import PerturbConfig
-        from ..agents.alethic_agent import AlethicAgent
-        from ..eval.metrics import compute_metrics
+        from .tools.payment_tool import PaymentTool
+        from .tools.refund_tool import RefundTool
+        from .tools.perturb import PerturbConfig
+        from .agents.alethic_agent import AlethicAgent
+        from .eval.metrics import compute_metrics
 
         kernel = self._kernel if self._kernel is not None else Kernel()
         cfg = PerturbConfig(
